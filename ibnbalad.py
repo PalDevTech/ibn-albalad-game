@@ -3,7 +3,7 @@ import random
 import urllib.parse
 
 # ==========================================
-# 1. إعدادات الصفحة والتصميم الديناميكي المتجاوب (RTL Responsive)
+# 1. إعدادات الصفحة والتصميم المتجاوب بذكاء (جوال وكمبيوتر)
 # ==========================================
 st.set_page_config(
     page_title="ابن البلد | التحدي الفلسطيني الأصيل",
@@ -11,7 +11,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# CSS ديناميكي ومتجاوب كلياً مع الشاشات (الجوال والكمبيوتر)
 st.markdown("""
     <style>
     .stApp {
@@ -21,30 +20,28 @@ st.markdown("""
         color: #fafafa;
     }
     
-    /* حاوية متجاوبة للأسئلة والنصوص */
+    /* بطاقة الأسئلة متجاوبة تلقائياً */
     .question-card {
         background-color: #1e2126;
-        padding: 5% 6%;
+        padding: 20px;
         border-radius: 15px;
         border: 2px solid #007A3D;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         margin-bottom: 20px;
-        width: 100%;
-        box-sizing: border-box;
     }
 
-    /* تنسيق ديناميكي للأزرار يتناسب مع لمس الشاشة وشاشات الكمبيوتر */
+    /* تنسيق الأزرار ليتناسب مع اللمس والشاشات الكبيرة */
     div.stButton > button {
         width: 100% !important;
         border-radius: 12px;
         height: auto;
         min-height: 3.5em;
-        padding: 10px 15px;
+        padding: 12px;
         font-weight: bold;
         background-color: #007A3D;
         color: white;
         border: none;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         font-size: 16px;
         white-space: normal !important;
         word-wrap: break-word !important;
@@ -58,29 +55,29 @@ st.markdown("""
     /* بطاقة النتائج المتجاوبة */
     .result-card {
         background-color: #1e2126;
-        padding: 6%;
+        padding: 22px;
         border-radius: 18px;
         border: 2px solid #007A3D;
         color: #fff;
         text-align: right;
         margin-top: 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        width: 100%;
-        box-sizing: border-box;
     }
 
-    h1, h2, h3, h4 {
-        color: #f1f1f1;
-    }
-
-    /* ميديا كويري لتحسين العرض خصيصاً على الهواتف الذكية */
+    /* تحسين العرض على الهواتف الذكية لمنع ضخامة العناوين */
     @media (max-width: 768px) {
+        h1 {
+            font-size: 24px !important;
+        }
+        h3 {
+            font-size: 18px !important;
+        }
         .question-card, .result-card {
             padding: 15px;
         }
         div.stButton > button {
-            font-size: 15px;
-            min-height: 4em;
+            font-size: 14px;
+            min-height: 3.8em;
         }
     }
     </style>
@@ -110,7 +107,7 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة الموسع (50 سؤالاً حقيقياً ومختلفاً)
+# 3. بنك الأسئلة (مدقق إمملائياً ولغوياً بالكامل)
 # ==========================================
 question_bank = [
     {
@@ -203,19 +200,19 @@ question_bank = [
     },
     {
         "q": "شو معنى كلمة 'هِسّ' باللهجة الدارجة عنا؟",
-        "options": [("طلب السكوت وعدم الإصدار أي صوت", 2), ("نوع من الاكل", 0), ("اسم حي قديم", 1)],
+        "options": [("طلب السكوت وعدم إصداره أي صوت", 2), ("نوع من الأكل", 0), ("اسم حي قديم", 1)],
     },
     {
         "q": "لما نقول عن شخص إنه 'بيوخذ الأمور برواق'، شو المقصود؟",
-        "options": [("هادئ وعاقل ولا يتسرع بقراراته", 2), ("يمشي بطيء جداً", 0), ("كسول ولا يعمل", 1)],
+        "options": [("هادئ وعاقل ولا يتسرع بقراراته", 2), ("يمشي ببطء شديد", 0), ("كسول ولا يعمل", 1)],
     },
     {
         "q": "شو أصل كلمة 'الزعتر البري' في جبال فلسطين؟",
         "options": [("نبات جبلي أصيل يدخل في التراث والفطور", 2), ("زهرة مستوردة", 0), ("نوع شجر مثمر", 1)],
     },
     {
-        "q": "كيف بتتصرف لو واجهك موقف صعبة ومش عارف راسك من رجليك؟",
-        "options": [("باخذ نفس وبستشير حدا ثقة وبدبرها", 2), ("بترك الشغل وبهرب", 0), ("بعصب وبصيح", 1)],
+        "q": "كيف بتتصرف لو واجهك موقف صعب ومش عارف راسك من رجليك؟",
+        "options": [("باخد نفس وبستشير حدا ثقة وبدبرها", 2), ("بترك الشغل وبهرب", 0), ("بعصب وبصيح", 1)],
     },
     {
         "q": "شو معنى تعبير 'قلبه أبيض' عنا بالحارة؟",
@@ -380,7 +377,6 @@ if not st.session_state.started:
             st.session_state.user_age = age_input
             st.session_state.user_gender = detect_gender(name_input)
             
-            # سحب 10 أسئلة فريدة تماماً وبشكل عشوائي بدون أي تكرار
             pool = question_bank.copy()
             random.shuffle(pool)
             st.session_state.selected_questions = pool[:10]
@@ -390,7 +386,7 @@ if not st.session_state.started:
             st.session_state.answers = {}
             st.rerun()
 
-# --- شاشة الأسئلة ---
+# --- شاشة الأسئلة (مع زر الرجوع حصرياً هنا) ---
 elif st.session_state.step < len(st.session_state.selected_questions):
     current_q_idx = st.session_state.step
     q_data = st.session_state.selected_questions[current_q_idx]
@@ -403,7 +399,7 @@ elif st.session_state.step < len(st.session_state.selected_questions):
     st.markdown(f"""
         <div class="question-card">
             <h4 style="color: #007A3D; margin-bottom: 10px;">أهلاً فيك يا {st.session_state.user_name} ({greeting}):</h4>
-            <p style="font-size: 19px; font-weight: bold; line-height: 1.6;">{q_data['q']}</p>
+            <p style="font-size: 18px; font-weight: bold; line-height: 1.6;">{q_data['q']}</p>
         </div>
     """, unsafe_allow_html=True)
     
@@ -421,7 +417,7 @@ elif st.session_state.step < len(st.session_state.selected_questions):
             st.session_state.step -= 1
             st.rerun()
 
-# --- شاشة النتيجة النهائية ---
+# --- شاشة النتيجة النهائية (خالية تماماً من زر الرجوع) ---
 else:
     final_score = sum(st.session_state.answers.values())
     result_data = get_unique_title(final_score)
@@ -449,7 +445,7 @@ else:
     st.markdown(f"""
         <div class="result-card">
             <h2>🏆 لقبك: {result_data['title']}</h2>
-            <p style="font-size: 18px; line-height: 1.6; margin-top: 10px;"><b>تحليل شخصيتك يا {st.session_state.user_name}:</b> {result_data['desc']}</p>
+            <p style="font-size: 17px; line-height: 1.6; margin-top: 10px;"><b>تحليل شخصيتك يا {st.session_state.user_name}:</b> {result_data['desc']}</p>
             <hr style="border-color: #007A3D; margin: 20px 0;">
             <h4 style="color: #007A3D;">📊 مؤشرات ابن البلد الخاصة فيك:</h4>
             <ul style="font-size: 15px; line-height: 1.8;">
@@ -471,14 +467,9 @@ else:
     
     st.write("")
     
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🔄 عيد التحدي من أول وجديد"):
-            st.session_state.started = False
-            st.session_state.step = 0
-            st.session_state.answers = {}
-            st.rerun()
-    with col2:
-        if st.button("⬅️ تعديل الإجابات السابقة"):
-            st.session_state.step = len(st.session_state.selected_questions) - 1
-            st.rerun()
+    # أزرار النهاية فقط (بدون أي أثر لزر الرجوع هنا)
+    if st.button("🔄 عيد التحدي من أول وجديد"):
+        st.session_state.started = False
+        st.session_state.step = 0
+        st.session_state.answers = {}
+        st.rerun()
