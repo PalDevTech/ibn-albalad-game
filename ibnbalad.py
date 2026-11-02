@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import urllib.parse
+import re
 
 # ==========================================
 # 1. إعدادات الصفحة والتصميم المتجاوب (RTL)
@@ -27,10 +28,6 @@ st.markdown("""
     }
     input::-webkit-input-placeholder {
         color: transparent !important;
-    }
-    /* إخفاء رسائل الـ Please enter وخطوط الإدخال الإنجليزية الافتراضية إن وجدت */
-    div[data-baseweb="input"] > div > div {
-        color: inherit;
     }
     
     .question-card {
@@ -105,7 +102,7 @@ def detect_gender(name):
         'شهد', 'مريم', 'فاطمة', 'عائشة', 'سارة', 'ريم', 'رنا', 'سعاد', 
         'حنان', 'إيمان', 'زينب', 'هدى', 'لجين', 'سماء', 'بيان', 'ديمة', 
         'لارا', 'ميس', 'نور', 'ياسمين', 'آية', 'رزان', 'تالا', 'لين', 'يسرا',
-        'تمارا', 'رغد', 'هديل', 'سجى', 'بتول', 'دعاء', 'آلاء', 'صفاء', 'اسراء'
+        'تمارا', 'رغد', 'هديل', 'سجى', 'بتول', 'دعاء', 'آلاء', 'صفاء', 'اسراء', 'مي'
     ]
     male_names = [
         'محمد', 'احمد', 'محمود', 'علي', 'عمر', 'خالد', 'إبراهيم', 'يوسف',
@@ -265,17 +262,18 @@ if not st.session_state.started:
     st.markdown("### اكتشف لقبك الحقيقي عشان تكون ابن البلد الأصيل")
     st.divider()
     
-    # استخدام placeholder="" لمنع ظهور أي نص إنجليزي افتراضي
     name_input = st.text_input("أدخل اسمك الكريم:", value="", placeholder="")
     age_input = st.number_input("عمرك البركة:", min_value=10, max_value=100, value=22)
     
     if st.button("🚀 بلش التحدي الآن"):
-        if name_input.strip() == "":
-            st.warning("يا ريت تكتب اسمك عشان نعرف مع مين بنحكي!")
+        clean_name = name_input.strip()
+        # شروط التحقق من الاسم: ألا يكون فارغاً، أن يكون طوله حرفين أو أكثر، وأن يحتوي على أحرف حقيقية (عربية أو إنجليزية) ولا يكون مجرد رموز أو أرقام
+        if clean_name == "" or len(clean_name) < 2 or not re.search(r'[\u0600-\u06FFa-zA-Z]', clean_name):
+            st.error("⚠️ يا ريت تكتب اسمك الكريم بشكل صحيح (حرفين على الأقل وبدون رموز عشوائية) لنقدر نبلش!")
         else:
-            st.session_state.user_name = name_input.strip()
+            st.session_state.user_name = clean_name
             st.session_state.user_age = age_input
-            st.session_state.user_gender = detect_gender(name_input)
+            st.session_state.user_gender = detect_gender(clean_name)
             
             processed_pool = []
             for item in raw_question_bank:
