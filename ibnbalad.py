@@ -20,20 +20,19 @@ st.markdown("""
         color: #fafafa;
     }
     
-    /* إزالة النص الفاهي (Placeholder) المزعج من حقول الإدخال */
-    input::placeholder {
+    /* إخفاء أي نصوص توضيحية أو كتابة فاهية داخل حقول الإدخال بشكل جذري */
+    input::placeholder, textarea::placeholder {
         color: transparent !important;
+        opacity: 0 !important;
     }
     input::-webkit-input-placeholder {
         color: transparent !important;
     }
-    input::-moz-placeholder {
-        color: transparent !important;
+    /* إخفاء رسائل الـ Please enter وخطوط الإدخال الإنجليزية الافتراضية إن وجدت */
+    div[data-baseweb="input"] > div > div {
+        color: inherit;
     }
-    input:-ms-input-placeholder {
-        color: transparent !important;
-    }
-
+    
     .question-card {
         background-color: #1e2126;
         padding: 20px;
@@ -121,7 +120,7 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة الموسع والكامل (مع تصحيح التعبيرات)
+# 3. بنك الأسئلة الموسع والكامل
 # ==========================================
 raw_question_bank = [
     {
@@ -266,7 +265,8 @@ if not st.session_state.started:
     st.markdown("### اكتشف لقبك الحقيقي عشان تكون ابن البلد الأصيل")
     st.divider()
     
-    name_input = st.text_input("أدخل اسمك الكريم:", placeholder="")
+    # استخدام placeholder="" لمنع ظهور أي نص إنجليزي افتراضي
+    name_input = st.text_input("أدخل اسمك الكريم:", value="", placeholder="")
     age_input = st.number_input("عمرك البركة:", min_value=10, max_value=100, value=22)
     
     if st.button("🚀 بلش التحدي الآن"):
