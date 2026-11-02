@@ -226,7 +226,7 @@ else:
             <hr style="border-color: #007A3D;">
             <h4>📊 مؤشرات ابن البلد الخاصة فيك:</h4>
             <ul>
-                <li><b>مؤشر التدبير والدبرة ({debray_val}%):</b> بقيس قدرتك على تسيير أمورك اليومية وحل المشاكل.</li>
+                <li><b>مؤشر التدبير و التصرف في الامور ({debray_val}%):</b> بقيس قدرتك على تسيير أمورك اليومية وحل المشاكل.</li>
                 <li><b>مؤشر طول البال والصبر ({sabr_val}%):</b> بقيس قدرتك على تحمل الضغوط برواق على طريقة أهل زمان.</li>
                 <li><b>مؤشر فطنة ابن البلد ({fa_hawa_val}%):</b> بقيس سرعة بديهتك وضحكتك اللي بتخفف هموم الشارع.</li>
             </ul>
@@ -237,9 +237,9 @@ else:
     
     # --- حل مشكلة رابط الواتساب النهائي ---
     # ملاحظة: عندما ترفع التطبيق على Streamlit Cloud، استبدل الرابط أدناه برابط تطبيقك الحقيقي
-    app_link = "https://ibn-albalad.streamlit.app" 
+    app_link = "https://ibn-albalad-game.streamlit.app" 
     
-    share_text = f"أنا لعبت تحدي 'ابن البلد' وطلع لقبي '{result_data['title']}'! 🇵🇸\nتعال جرب اسمك وشوف شو بيطلعلك بالتحدي الفلسطيني:\n🔗 {app_link}"
+    share_text = f"أنا لعبت تحدي 'ابن البلد' وطلع لقبي '{result_data['title']}'! 🇵🇸\nتعال جرب وشوف وخليك ابن بلد:\n🔗 {app_link}"
     whatsapp_url = f"https://api.whatsapp.com/send?text={urllib.parse.quote(share_text)}"
     
     st.markdown(f'<a href="{whatsapp_url}" target="_blank"><button style="width:100%; border-radius:12px; height:3.5em; font-weight:bold; background-color:#25D366; color:white; border:none; cursor:pointer; text-align:center; font-size:16px;">📲 شارك نتيجتك ولقبك على واتساب</button></a>', unsafe_allow_html=True)
