@@ -3,7 +3,7 @@ import random
 import urllib.parse
 
 # ==========================================
-# 1. إعدادات الصفحة وتصميم الواجهة (RTL النظيف)
+# 1. إعدادات الصفحة والتصميم الديناميكي المتجاوب (RTL Responsive)
 # ==========================================
 st.set_page_config(
     page_title="ابن البلد | التحدي الفلسطيني الأصيل",
@@ -11,6 +11,7 @@ st.set_page_config(
     layout="centered"
 )
 
+# CSS ديناميكي ومتجاوب كلياً مع الشاشات (الجوال والكمبيوتر)
 st.markdown("""
     <style>
     .stApp {
@@ -19,42 +20,68 @@ st.markdown("""
         background-color: #0e1117;
         color: #fafafa;
     }
+    
+    /* حاوية متجاوبة للأسئلة والنصوص */
     .question-card {
         background-color: #1e2126;
-        padding: 22px;
+        padding: 5% 6%;
         border-radius: 15px;
         border: 2px solid #007A3D;
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         margin-bottom: 20px;
-    }
-    div.stButton > button {
         width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* تنسيق ديناميكي للأزرار يتناسب مع لمس الشاشة وشاشات الكمبيوتر */
+    div.stButton > button {
+        width: 100% !important;
         border-radius: 12px;
-        height: 3.8em;
+        height: auto;
+        min-height: 3.5em;
+        padding: 10px 15px;
         font-weight: bold;
         background-color: #007A3D;
         color: white;
         border: none;
         margin-bottom: 12px;
         font-size: 16px;
+        white-space: normal !important;
+        word-wrap: break-word !important;
         transition: 0.3s;
     }
     div.stButton > button:hover {
         background-color: #CE1126;
         color: white;
     }
+
+    /* بطاقة النتائج المتجاوبة */
     .result-card {
         background-color: #1e2126;
-        padding: 25px;
+        padding: 6%;
         border-radius: 18px;
         border: 2px solid #007A3D;
         color: #fff;
         text-align: right;
         margin-top: 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        width: 100%;
+        box-sizing: border-box;
     }
+
     h1, h2, h3, h4 {
         color: #f1f1f1;
+    }
+
+    /* ميديا كويري لتحسين العرض خصيصاً على الهواتف الذكية */
+    @media (max-width: 768px) {
+        .question-card, .result-card {
+            padding: 15px;
+        }
+        div.stButton > button {
+            font-size: 15px;
+            min-height: 4em;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -83,7 +110,7 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة الموسع (50 سؤالاً حقيقياً ومختلفاً تماماً)
+# 3. بنك الأسئلة الموسع (50 سؤالاً حقيقياً ومختلفاً)
 # ==========================================
 question_bank = [
     {
@@ -353,7 +380,7 @@ if not st.session_state.started:
             st.session_state.user_age = age_input
             st.session_state.user_gender = detect_gender(name_input)
             
-            # سحب 10 أسئلة فريدة تماماً من البنك بدون أي تكرار
+            # سحب 10 أسئلة فريدة تماماً وبشكل عشوائي بدون أي تكرار
             pool = question_bank.copy()
             random.shuffle(pool)
             st.session_state.selected_questions = pool[:10]
@@ -363,7 +390,7 @@ if not st.session_state.started:
             st.session_state.answers = {}
             st.rerun()
 
-# --- شاشة الأسئلة (مع زر الرجوع حصرياً هنا) ---
+# --- شاشة الأسئلة ---
 elif st.session_state.step < len(st.session_state.selected_questions):
     current_q_idx = st.session_state.step
     q_data = st.session_state.selected_questions[current_q_idx]
@@ -389,13 +416,12 @@ elif st.session_state.step < len(st.session_state.selected_questions):
             st.rerun()
             
     st.write("")
-    # زر الرجوع يظهر هنا فقط أثناء الإجابة على الأسئلة
     if current_q_idx > 0:
         if st.button("⬅️ رجوع للسؤال السابق وتعديل الإجابة"):
             st.session_state.step -= 1
             st.rerun()
 
-# --- شاشة النتيجة النهائية (بدون زر رجوع، مع عبارات متغيرة وديناميكية) ---
+# --- شاشة النتيجة النهائية ---
 else:
     final_score = sum(st.session_state.answers.values())
     result_data = get_unique_title(final_score)
