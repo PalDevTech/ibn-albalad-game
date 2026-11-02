@@ -47,6 +47,22 @@ st.markdown("""
         background-color: #CE1126;
         color: white;
     }
+    .feedback-box-correct {
+        background-color: #1b4d3e;
+        border: 2px solid #007A3D;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        color: #d4edda;
+    }
+    .feedback-box-wrong {
+        background-color: #5c1d24;
+        border: 2px solid #CE1126;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        color: #f8d7da;
+    }
     .result-card {
         background-color: #1e2126;
         padding: 22px;
@@ -90,12 +106,12 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة (مدقق لغوياً، بلاغياً وثقافياً 100%)
-# ملاحظة: الخيار الأول دائماً هو الإجابة الصحيحة بوزن (2)، وسنقوم بخلطه عشوائياً عند العرض
+# 3. بنك الأسئلة الموسع (مدقق لغويّاً وثقافياً)
+# (الخيار الأول في كل قاموس هو الإجابة الصحيحة بوزن 2، ويتم خلطه عشوائياً برمجياً)
 # ==========================================
 raw_question_bank = [
     {
-        "q": "المثل الشعبي يقول: 'اللي ما إلو خير في أهله...' كمل المثل باللهجة الفلسطينية الصحيحة؟",
+        "q": "المثل الشعبي بيقول: 'اللي ما إلو خير في أهله...' كمل المثل باللهجة الفلسطينية الصحيحة؟",
         "options": [("ما إلو خير في حاله أصلًا!", 2), ("ما بينوكل معه ملح بالمرة", 1), ("بيروح عالعرس بلا دعوة", 0)],
     },
     {
@@ -155,36 +171,12 @@ raw_question_bank = [
         "options": [("طلعة ترفيهية أو تنزّه بالبلد", 2), ("رشة عطر سريعة", 0), ("ضربة حجر", 1)],
     },
     {
-        "q": "لما حدا يتدخل بشيء ما بيعنيه، شو المثل اللي بنحكيه عادة؟",
-        "options": [("شو دخلك بغيرك؟ كل بطيخة وقشرها", 2), ("أهلاً وسهلاً فيه", 0), ("الله يسامحه", 1)],
-    },
-    {
-        "q": "شو المقصود بكلمة 'الحوش' في البيوت الفلسطينية القديمة؟",
-        "options": [("الساحة الداخلية المشتركة بين الدور", 2), ("المطبخ الصغير", 0), ("غرفة النوم", 1)],
-    },
-    {
-        "q": "إذا شب بدو يخطب وبحكوا أهله 'أخذنا صهر نشمي'، شو بيقصدوا؟",
-        "options": [("أنه زلمة قد الثقة وبعتمد عليه بكل شيء", 2), ("أنه غني كتير", 0), ("أنه بيعرف يطبخ", 1)],
-    },
-    {
-        "q": "شو هي أكلة 'المنسف' بالتراث الفلسطيني والأردني بالمناسبات الكبيرة؟",
-        "options": [("سيد الأكلات باللحم والجميد واللبن", 2), ("نوع من الحلوى", 0), ("أداة تنظيف", 1)],
-    },
-    {
-        "q": "كيف بتتصرف لو واحد زعلك بس بطريقة غير مباشرة؟",
-        "options": [("بواجهه بهدوء وبأخذ حقي بكلمتين وافيين", 2), ("بكتّم بقلبي وبحقد", 0), ("بشكي لكل الناس", 1)],
-    },
-    {
         "q": "ما المعنى المجازي للمثل الشعبي: 'مثل اللي بيبيع مي بحارة السقايين'؟",
         "options": [("يتشاطر ويتذاكى على ناس أصلًا أصحاب المهنة أو الخبراء فيها", 2), ("شخص يبيع الماء للناس العطشى في الصيف", 1), ("تاجر صادق ومخلص بعمله التجاري", 0)],
     },
     {
         "q": "إذا حدا حكى لك 'يا فتاح يا عليم'، شو الجواب العفوي المتداول بعدها؟",
         "options": [("يا رزاق يا كريم", 2), ("صباح الخير", 0), ("الحمد لله", 1)],
-    },
-    {
-        "q": "شو معنى كلمة 'هِسّ' باللهجة الدارجة عنا؟",
-        "options": [("طلب السكوت وعدم إصداره أي صوت", 2), ("نوع من الأكل", 0), ("اسم حي قديم", 1)],
     },
     {
         "q": "لما نقول عن شخص إنه 'بيوخذ الأمور برواق'، شو المقصود؟",
@@ -339,6 +331,12 @@ if "user_gender" not in st.session_state:
     st.session_state.user_gender = "ذكر"
 if "selected_questions" not in st.session_state:
     st.session_state.selected_questions = []
+if "answered_current" not in st.session_state:
+    st.session_state.answered_current = False
+if "last_feedback" not in st.session_state:
+    st.session_state.last_feedback = ""
+if "last_is_correct" not in st.session_state:
+    st.session_state.last_is_correct = True
 
 # --- شاشة البداية ---
 if not st.session_state.started:
@@ -357,12 +355,12 @@ if not st.session_state.started:
             st.session_state.user_age = age_input
             st.session_state.user_gender = detect_gender(name_input)
             
-            # سحب 10 أسئلة فريدة وخلط خيارات كل سؤال عشوائياً لمنع ثبات مكان الإجابة الصحيحة
+            # سحب 10 أسئلة فريدة وخلط خيارات كل سؤال عشوائياً
             processed_pool = []
             for item in raw_question_bank:
                 q_text = item["q"]
                 opts = list(item["options"])
-                random.shuffle(opts)  # خلط الخيارات عشوائياً لكل سؤال
+                random.shuffle(opts)
                 processed_pool.append({"q": q_text, "options": opts})
             
             random.shuffle(processed_pool)
@@ -371,9 +369,10 @@ if not st.session_state.started:
             st.session_state.started = True
             st.session_state.step = 0
             st.session_state.answers = {}
+            st.session_state.answered_current = False
             st.rerun()
 
-# --- شاشة الأسئلة (مع زر الرجوع حصرياً هنا) ---
+# --- شاشة الأسئلة مع التغذية الراجعة الفورية وزر الرجوع ---
 elif st.session_state.step < len(st.session_state.selected_questions):
     current_q_idx = st.session_state.step
     q_data = st.session_state.selected_questions[current_q_idx]
@@ -392,16 +391,42 @@ elif st.session_state.step < len(st.session_state.selected_questions):
     
     st.write("")
     
-    for opt_text, points in q_data["options"]:
-        if st.button(opt_text, key=f"ans_{current_q_idx}_{opt_text}"):
-            st.session_state.answers[current_q_idx] = points
-            st.session_state.step += 1
-            st.rerun()
+    # إذا لم يتم اختيار إجابة بعد في هذا السؤال
+    if not st.session_state.answered_current:
+        for opt_text, points in q_data["options"]:
+            if st.button(opt_text, key=f"ans_{current_q_idx}_{opt_text}"):
+                st.session_state.answers[current_q_idx] = points
+                st.session_state.answered_current = True
+                
+                # تقييم فوري حسب النقاط
+                if points == 2:
+                    st.session_state.last_is_correct = True
+                    st.session_state.last_feedback = "🎯 وحش! إجابة ذكية ومية المية بتعبر عن أصل أصيل."
+                elif points == 1:
+                    st.session_state.last_is_correct = True
+                    st.session_state.last_feedback = "⚡ إجابة مقبولة وبتمشي الحال، بس فيها لفتة بدها شوية تركيز."
+                else:
+                    st.session_state.last_is_correct = False
+                    st.session_state.last_feedback = "❌ يا زلمة لا هيك خيبت ظني! هاي إجابة بعيدة كل البعد عن جو الحارة."
+                st.rerun()
+                
+        st.write("")
+        if current_q_idx > 0:
+            if st.button("⬅️ رجوع للسؤال السابق وتعديل الإجابة"):
+                st.session_state.step -= 1
+                st.rerun()
+                
+    # إذا تم اختيار الإجابة، نعرض التغذية الراجعة وزر المتابعة
+    else:
+        if st.session_state.last_is_correct:
+            st.markdown(f'<div class="feedback-box-correct">{st.session_state.last_feedback}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="feedback-box-wrong">{st.session_state.last_feedback}</div>', unsafe_allow_html=True)
             
-    st.write("")
-    if current_q_idx > 0:
-        if st.button("⬅️ رجوع للسؤال السابق وتعديل الإجابة"):
-            st.session_state.step -= 1
+        st.write("")
+        if st.button("👉 اضغط هنا للمتابعة للسؤال التالي"):
+            st.session_state.answered_current = False
+            st.session_state.step += 1
             st.rerun()
 
 # --- شاشة النتيجة النهائية (خالية تماماً من زر الرجوع) ---
@@ -458,4 +483,5 @@ else:
         st.session_state.started = False
         st.session_state.step = 0
         st.session_state.answers = {}
+        st.session_state.answered_current = False
         st.rerun()
