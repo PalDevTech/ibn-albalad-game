@@ -3,7 +3,7 @@ import random
 import urllib.parse
 
 # ==========================================
-# 1. إعدادات الصفحة والتصميم المتجاوب بذكاء (جوال وكمبيوتر)
+# 1. إعدادات الصفحة والتصميم المتجاوب (RTL)
 # ==========================================
 st.set_page_config(
     page_title="ابن البلد | التحدي الفلسطيني الأصيل",
@@ -19,8 +19,6 @@ st.markdown("""
         background-color: #0e1117;
         color: #fafafa;
     }
-    
-    /* بطاقة الأسئلة متجاوبة تلقائياً */
     .question-card {
         background-color: #1e2126;
         padding: 20px;
@@ -29,8 +27,6 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         margin-bottom: 20px;
     }
-
-    /* تنسيق الأزرار ليتناسب مع اللمس والشاشات الكبيرة */
     div.stButton > button {
         width: 100% !important;
         border-radius: 12px;
@@ -51,8 +47,6 @@ st.markdown("""
         background-color: #CE1126;
         color: white;
     }
-
-    /* بطاقة النتائج المتجاوبة */
     .result-card {
         background-color: #1e2126;
         padding: 22px;
@@ -63,22 +57,11 @@ st.markdown("""
         margin-top: 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     }
-
-    /* تحسين العرض على الهواتف الذكية لمنع ضخامة العناوين */
     @media (max-width: 768px) {
-        h1 {
-            font-size: 24px !important;
-        }
-        h3 {
-            font-size: 18px !important;
-        }
-        .question-card, .result-card {
-            padding: 15px;
-        }
-        div.stButton > button {
-            font-size: 14px;
-            min-height: 3.8em;
-        }
+        h1 { font-size: 24px !important; }
+        h3 { font-size: 18px !important; }
+        .question-card, .result-card { padding: 15px; }
+        div.stButton > button { font-size: 14px; min-height: 3.8em; }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -107,9 +90,10 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة (مدقق إمملائياً ولغوياً بالكامل)
+# 3. بنك الأسئلة (مدقق لغوياً، بلاغياً وثقافياً 100%)
+# ملاحظة: الخيار الأول دائماً هو الإجابة الصحيحة بوزن (2)، وسنقوم بخلطه عشوائياً عند العرض
 # ==========================================
-question_bank = [
+raw_question_bank = [
     {
         "q": "المثل الشعبي يقول: 'اللي ما إلو خير في أهله...' كمل المثل باللهجة الفلسطينية الصحيحة؟",
         "options": [("ما إلو خير في حاله أصلًا!", 2), ("ما بينوكل معه ملح بالمرة", 1), ("بيروح عالعرس بلا دعوة", 0)],
@@ -120,7 +104,7 @@ question_bank = [
     },
     {
         "q": "أكلة شعبية فلسطينية أصيلة لا تُعوض بيوم الجمعة ولملمة العيلة، شو هي؟",
-        "options": [("المسخن الزاكي أو المقلوبة عأصولها بقرص البصل", 2), ("مجدورة برغل مع بصل مقلي (مجدرة)", 1), ("إندومي وخلصنا عجلانين", 0)],
+        "options": [("صينية مسخن بالزيت البلدى والبصل المحمر أو مقلوبة عأصولها", 2), ("مجدورة برغل مع بصل مقلي (مجدرة)", 1), ("إندومي وخلصنا عجلانين", 0)],
     },
     {
         "q": "لما تطير المصاري وتنشف جيبتك بنص الشهر، شو طريقتك بالتدبير؟",
@@ -191,8 +175,8 @@ question_bank = [
         "options": [("بواجهه بهدوء وبأخذ حقي بكلمتين وافيين", 2), ("بكتّم بقلبي وبحقد", 0), ("بشكي لكل الناس", 1)],
     },
     {
-        "q": "شو معنى 'زلمة قد حاله' باللهجة الفلسطينية؟",
-        "options": [("معتمد على حاله وقوي بقراراته", 2), ("شخص طويل القامة", 0), ("صاحب محل تجاري", 1)],
+        "q": "ما المعنى المجازي للمثل الشعبي: 'مثل اللي بيبيع مي بحارة السقايين'؟",
+        "options": [("يتشاطر ويتذاكى على ناس أصلًا أصحاب المهنة أو الخبراء فيها", 2), ("شخص يبيع الماء للناس العطشى في الصيف", 1), ("تاجر صادق ومخلص بعمله التجاري", 0)],
     },
     {
         "q": "إذا حدا حكى لك 'يا فتاح يا عليم'، شو الجواب العفوي المتداول بعدها؟",
@@ -217,10 +201,6 @@ question_bank = [
     {
         "q": "شو معنى تعبير 'قلبه أبيض' عنا بالحارة؟",
         "options": [("طيب القلب ولا يحمل غل أو حقد", 2), ("لونه أبيض", 0), ("مريض بالقلب", 1)],
-    },
-    {
-        "q": "لما يحكوا 'فلان بيبيع مويا بسقاي الحارة'، شو بيقصدوا؟",
-        "options": [("بقصوا عليه لأنه بشتغل شغلات غريبة", 2), ("تاجر شاطر", 0), ("ساقي مياه مجاني", 1)],
     },
     {
         "q": "شو معنى كلمة 'طوشة' باللهجة الفلسطينية؟",
@@ -377,9 +357,16 @@ if not st.session_state.started:
             st.session_state.user_age = age_input
             st.session_state.user_gender = detect_gender(name_input)
             
-            pool = question_bank.copy()
-            random.shuffle(pool)
-            st.session_state.selected_questions = pool[:10]
+            # سحب 10 أسئلة فريدة وخلط خيارات كل سؤال عشوائياً لمنع ثبات مكان الإجابة الصحيحة
+            processed_pool = []
+            for item in raw_question_bank:
+                q_text = item["q"]
+                opts = list(item["options"])
+                random.shuffle(opts)  # خلط الخيارات عشوائياً لكل سؤال
+                processed_pool.append({"q": q_text, "options": opts})
+            
+            random.shuffle(processed_pool)
+            st.session_state.selected_questions = processed_pool[:10]
             
             st.session_state.started = True
             st.session_state.step = 0
@@ -449,9 +436,9 @@ else:
             <hr style="border-color: #007A3D; margin: 20px 0;">
             <h4 style="color: #007A3D;">📊 مؤشرات ابن البلد الخاصة فيك:</h4>
             <ul style="font-size: 15px; line-height: 1.8;">
-                <li><b>مؤشر التدبير والتصرف في الأمور ({debray_val}%):</b> بقيس قدرتك على تسيير أمورك اليومية وحل المشاكل.</li>
-                <li><b>مؤشر طول البال والصبر ({sabr_val}%):</b> بقيس قدرتك على تحمل الضغوط برواق على طريقة أهل زمان.</li>
-                <li><b>مؤشر فطنة ابن البلد ({fa_hawa_val}%):</b> بقيس سرعة بديهتك وضحكتك اللي بتخفف هموم الشارع.</li>
+                <li><b>مؤشر التدبير والتصرف في الأمور ({debray_val}%):</b> يقيس قدرتك على تسيير أمورك اليومية وحل المشاكل.</li>
+                <li><b>مؤشر طول البال والصبر ({sabr_val}%):</b> يقيس قدرتك على تحمل الضغوط برواق على طريقة أهل زمان.</li>
+                <li><b>مؤشر فطنة ابن البلد ({fa_hawa_val}%):</b> يقيس سرعة بديهتك وضحكتك التي تخفف هموم الشارع.</li>
             </ul>
         </div>
     """, unsafe_allow_html=True)
@@ -467,7 +454,6 @@ else:
     
     st.write("")
     
-    # أزرار النهاية فقط (بدون أي أثر لزر الرجوع هنا)
     if st.button("🔄 عيد التحدي من أول وجديد"):
         st.session_state.started = False
         st.session_state.step = 0
