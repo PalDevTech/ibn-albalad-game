@@ -7,7 +7,7 @@ import re
 # 1. إعدادات الصفحة والتصميم المتجاوب (RTL)
 # ==========================================
 st.set_page_config(
-    page_title="ابن البلد | التحدي الفلسطيني الأصيل",
+    page_title="ابن/بنت البلد | التحدي الفلسطيني الأصيل",
     page_icon="🇵🇸",
     layout="centered"
 )
@@ -117,7 +117,7 @@ def detect_gender(name):
     return "ذكر"
 
 # ==========================================
-# 3. بنك الأسئلة الموسع والكامل (50 سؤالاً مدققاً ومنقحاً لغوياً وثقافياً)
+# 3. بنك الأسئلة الموسع والكامل (50 سؤالاً)
 # ==========================================
 raw_question_bank = [
     {
@@ -323,34 +323,31 @@ raw_question_bank = [
 ]
 
 # ==========================================
-# 4. الألقاب العشرة الفريدة والمفسرة
+# 4. الألقاب العشرة الفريدة والمفسرة (مراعية للجنس)
 # ==========================================
-def get_unique_title(score):
-    if score >= 18:
-        return {
-            "title": "عقيد البلد وسبعها العتيق 🎖️",
-            "desc": "زلمة مواقف من طراز رفيع، بتعرف تدبر حالك بأضيق الأزمات، وكلمتك مسموعة وعقلك بوزن بلد."
-        }
-    elif score >= 14:
-        return {
-            "title": "حكيم الدار وعمودها الراسخ ☕",
-            "desc": "عقلك متزن، حافظ الأصول والأمثال عن غيب، والكل يلجأ لك لما تحتار الأمور بوجوهها."
-        }
-    elif score >= 10:
-        return {
-            "title": "ابن البلد النشمي اللي ما بغلبوه ⚡",
-            "desc": "واخد الحياة ببساطة وشهامة، قلبك أبيض، وبتعرف كيف تضحك على الهم بدل ما الهم يضحك عليك."
-        }
-    elif score >= 6:
-        return {
-            "title": "فيلسوف القهوة والشارع الهادئ 🫒",
-            "desc": "تحليلك للأمور على مهله بس دقيق وصائب. بتوخذ وبتعطي بالحكي وعارف أصول اللعبة."
-        }
-    else:
-        return {
-            "title": "ملك البساطة وعفوية الشارع 🎈",
-            "desc": "عايشها يوم بيوم وبكل بساطة وعفوية، والناس بتحب طيبة قلبك وصفاء نيتك."
-        }
+def get_unique_title(score, gender):
+    if gender == "ذكر":
+        if score >= 18:
+            return {"title": "عقيد البلد وسبعها العتيق 🎖️", "desc": "زلمة مواقف من طراز رفيع، بتعرف تدبر حالك بأضيق الأزمات، وكلمتك مسموعة وعقلك بوزن بلد."}
+        elif score >= 14:
+            return {"title": "حكيم الدار وعمودها الراسخ ☕", "desc": "عقلك متزن، حافظ الأصول والأمثال عن غيب، والكل يلجأ لك لما تحتار الأمور بوجوهها."}
+        elif score >= 10:
+            return {"title": "ابن البلد النشمي اللي ما بغلبوه ⚡", "desc": "واخد الحياة ببساطة وشهامة، قلبك أبيض، وبتعرف كيف تضحك على الهم بدل ما الهم يضحك عليك."}
+        elif score >= 6:
+            return {"title": "فيلسوف القهوة والشارع الهادئ 🫒", "desc": "تحليلك للأمور على مهله بس دقيق وصائب. بتوخذ وبتعطي بالحكي وعارف أصول اللعبة."}
+        else:
+            return {"title": "ملك البساطة وعفوية الشارع 🎈", "desc": "عايشها يوم بيوم وبكل بساطة وعفوية، والناس بتحب طيبة قلبك وصفاء نيتك."}
+    else: # أنثى
+        if score >= 18:
+            return {"title": "عقيدة البلد ودرتها الأصيلة 🎖️", "desc": "بنت أصول من طراز رفيع، بتعرفي تدبري أمورك بأضيق الأزمات، وكلمتك مسموعة وعقلك بوزن بلد."}
+        elif score >= 14:
+            return {"title": "حكيمة الدار وعمودها الراسخ ☕", "desc": "عقلك متزن، حافظة الأصول والأمثال عن غيب، والكل يلجأ لك لما تحتار الأمور بوجوهها."}
+        elif score >= 10:
+            return {"title": "بنت البلد النشمية اللي ما بغلبوها ⚡", "desc": "واخدة الحياة ببساطة وشهامة، قلبك أبيض، وبتعرفي كيف تضحي وتضحكي على الهم برواق."}
+        elif score >= 6:
+            return {"title": "فيلسوفَة القهوة والشارع الهادئ 🫒", "desc": "تحليلك للأمور على مهله بس دقيق وصائب. بتوخذي وبتعطي بالحكي وعارفة أصول اللعبة."}
+        else:
+            return {"title": "ملكة البساطة وعفوية الدار 🎈", "desc": "عايشتها يوم بيوم وبكل بساطة وعفوية، والناس بتحب طيبة قلبك وصفاء نيتك."}
 
 # ==========================================
 # 5. إدارة الجلسة وتطبيق اللعبة
@@ -378,8 +375,9 @@ if "last_is_correct" not in st.session_state:
 
 # --- شاشة البداية ---
 if not st.session_state.started:
-    st.title("🇵🇸 ابن البلد - التحدي الفلسطيني")
-    st.markdown("### اكتشف لقبك الحقيقي عشان تكون ابن البلد الأصيل")
+    # عنوان ديناميكي حسب الاختيار الافتراضي أو عند الدخول
+    st.title("🇵🇸 ابن/بنت البلد - التحدي الفلسطيني")
+    st.markdown("### اكتشف لقبك الحقيقي عشان تكون ابن أو بنت البلد الأصيل")
     st.divider()
     
     name_input = st.text_input("أدخل اسمك الكريم:", value="", placeholder="")
@@ -418,7 +416,6 @@ elif st.session_state.step < len(st.session_state.selected_questions):
     st.markdown(f"### 📌 السؤال رقم ({current_q_idx + 1} من 10)")
     st.divider()
     
-    # تنويع عبارات الترحيب عشوائياً حسب الجنس
     if st.session_state.user_gender == "ذكر":
         greetings = ["يا نشمي", "يا غالي", "يا خيو", "يا زلمة", "يا سبع", "يا بطل البلد"]
     else:
@@ -434,13 +431,14 @@ elif st.session_state.step < len(st.session_state.selected_questions):
     
     st.write("")
     
+    # حل مشكلة الأزرار الملونة باللون الأحمر مسبقاً: ربط الـ key برقم السؤال الحالي
     if not st.session_state.answered_current:
-        for opt_text, points in q_data["options"]:
-            if st.button(opt_text, key=f"ans_{current_q_idx}_{opt_text}"):
+        for i, (opt_text, points) in enumerate(q_data["options"]):
+            # مفتاح فريد لكل زر يعتمد على رقم السؤال الحالي لتجنب تداخل الذاكرة
+            if st.button(opt_text, key=f"q_{current_q_idx}_opt_{i}"):
                 st.session_state.answers[current_q_idx] = points
                 st.session_state.answered_current = True
                 
-                # ردود فوريّة مراعية للجنس ومتنوعة كلياً
                 if st.session_state.user_gender == "ذكر":
                     if points == 2:
                         st.session_state.last_is_correct = True
@@ -486,26 +484,35 @@ elif st.session_state.step < len(st.session_state.selected_questions):
                 
         st.write("")
         if current_q_idx > 0:
-            if st.button("⬅️ رجوع للسؤال السابق وتعديل الإجابة"):
+            if st.button("⬅️ رجوع للسؤال السابق وتعديل الإجابة", key=f"back_{current_q_idx}"):
                 st.session_state.step -= 1
                 st.rerun()
                 
     else:
+        # عرض التغذية الراجعة
         if st.session_state.last_is_correct:
             st.markdown(f'<div class="feedback-box-correct">{st.session_state.last_feedback}</div>', unsafe_allow_html=True)
         else:
             st.markdown(f'<div class="feedback-box-wrong">{st.session_state.last_feedback}</div>', unsafe_allow_html=True)
             
         st.write("")
-        if st.button("👉 اضغط هنا للمتابعة للسؤال التالي"):
-            st.session_state.answered_current = False
-            st.session_state.step += 1
-            st.rerun()
+        
+        # ميزة جديدة: السماح بتغيير الإجابة فوراً إذا كانت خطأ أو قبل الانتقال
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("👉 المتابعة للسؤال التالي", key=f"next_{current_q_idx}"):
+                st.session_state.answered_current = False
+                st.session_state.step += 1
+                st.rerun()
+        with col2:
+            if st.button("🔄 تغيير وإعادة اختيار الإجابة", key=f"change_{current_q_idx}"):
+                st.session_state.answered_current = False
+                st.rerun()
 
 # --- شاشة النتيجة النهائية ---
 else:
     final_score = sum(st.session_state.answers.values())
-    result_data = get_unique_title(final_score)
+    result_data = get_unique_title(final_score, st.session_state.user_gender)
     
     if st.session_state.user_gender == "ذكر":
         success_phrases = [
@@ -513,12 +520,14 @@ else:
             f"🔥 الله عليك يا {st.session_state.user_name} يا نشمي! خلصت التحدي وطلعت بتفهمها عالبطيء.",
             f"💪 كفو ثم كفو يا {st.session_state.user_name}! ختمت التحدي وطلع عقلك بوزن بلد."
         ]
+        game_title_share = "ابن البلد"
     else:
         success_phrases = [
             f"🎉 كفو يا {st.session_state.user_name} يا صبيّة يا نشمية! ختمت التحدي برواق وذكاء.",
             f"✨ يا عيني عليكِ يا {st.session_state.user_name} يا غالية! أثبتّي إنك بنت دار وبتعرفي الأصول.",
             f"👑 كفو والله يا {st.session_state.user_name}! ختمتِ التحدي وطلعتِ ملكة التدبير والدبرة."
         ]
+        game_title_share = "بنت البلد"
     
     chosen_success_msg = random.choice(success_phrases)
     st.success(chosen_success_msg)
@@ -532,11 +541,11 @@ else:
             <h2>🏆 لقبك: {result_data['title']}</h2>
             <p style="font-size: 17px; line-height: 1.6; margin-top: 10px;"><b>تحليل شخصيتك يا {st.session_state.user_name}:</b> {result_data['desc']}</p>
             <hr style="border-color: #007A3D; margin: 20px 0;">
-            <h4 style="color: #007A3D;">📊 مؤشرات ابن البلد الخاصة فيك:</h4>
+            <h4 style="color: #007A3D;">📊 مؤشرات {game_title_share} الخاصة فيك:</h4>
             <ul style="font-size: 15px; line-height: 1.8;">
                 <li><b>مؤشر التدبير والتصرف في الأمور ({debray_val}%):</b> يقيس قدرتك على تسيير أمورك اليومية وحل المشاكل.</li>
                 <li><b>مؤشر طول البال والصبر ({sabr_val}%):</b> يقيس قدرتك على تحمل الضغوط برواق على طريقة أهل زمان.</li>
-                <li><b>مؤشر فطنة ابن البلد ({fa_hawa_val}%):</b> يقيس سرعة بديهتك وضحكتك التي تخفف هموم الشارع.</li>
+                <li><b>مؤشر فطنة {game_title_share} ({fa_hawa_val}%):</b> يقيس سرعة بديهتك وضحكتك التي تخفف هموم الشارع.</li>
             </ul>
         </div>
     """, unsafe_allow_html=True)
@@ -545,14 +554,14 @@ else:
     
     app_link = "https://ibn-albalad-game.streamlit.app" 
     
-    share_text = f"أنا لعبت تحدي 'ابن البلد' وطلع لقبي '{result_data['title']}'! 🇵🇸\nتعال جرب وشوف وخليك ابن بلد:\n🔗 {app_link}"
+    share_text = f"أنا لعبت تحدي '{game_title_share}' وطلع لقبي '{result_data['title']}'! 🇵🇸\nتعال جرب وشوف وخليك قدها:\n🔗 {app_link}"
     whatsapp_url = f"https://api.whatsapp.com/send?text={urllib.parse.quote(share_text)}"
     
     st.markdown(f'<a href="{whatsapp_url}" target="_blank"><button style="width:100%; border-radius:12px; height:3.8em; font-weight:bold; background-color:#25D366; color:white; border:none; cursor:pointer; text-align:center; font-size:16px;">📲 شارك نتيجتك ولقبك على واتساب</button></a>', unsafe_allow_html=True)
     
     st.write("")
     
-    if st.button("🔄 عيد التحدي من أول وجديد"):
+    if st.button("🔄 عيد التحدي من أول وجديد", key="restart_game"):
         st.session_state.started = False
         st.session_state.step = 0
         st.session_state.answers = {}
